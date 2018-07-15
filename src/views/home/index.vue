@@ -18,7 +18,7 @@
           <el-input type="password" v-model="form.password" style="width: 250px"></el-input>          
         </el-form-item>
         <el-form-item label="权限">
-         {{userInfo.userData.rid == 1 ? '超级管理员': '项目管理员' }}
+         {{userInfo.userData.rid == 1 ? '超级管理员': userInfo.userData.rid == 2 ? '项目管理员' : '业务员' }}
         </el-form-item>
         <!-- <el-form-item label="所属项目">
          {{form.xuan}} 123456
@@ -33,6 +33,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import {ajaxEditMyInfo} from '@/api/home'
+
 
 export default {
   name: 'home',
@@ -49,12 +51,23 @@ export default {
         name: '',
         nickname: '',
         password: ''
-
       }
     }
   },
   methods: {
     onSubmit() {
+       if(form.nickname == '' ){
+        this.$message("请输入昵称");
+        return;
+      }
+      if(form.password == '' ){
+        this.$message("请输入包换字母、数字的5-20字符密码");
+        return;
+      }
+      ajaxEditMyInfo(form.nickname,this.userInfo.userData.id,from.password,'').then(res=>{
+        console.log(res);
+        this.$message.success(res.data.msg);
+      })
       console.log('submit!')
     }
   },

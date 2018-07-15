@@ -30,7 +30,7 @@ service.interceptors.response.use(
     const res = JSON.parse(response.data)
     if (res.status !== 1) {
       Message({
-        message: res.message,
+        message: res.data.msg,
         type: 'error',
         duration: 5 * 1000
       })
@@ -47,7 +47,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject('error')
+      return Promise.reject("error: " +  res.data.msg)
     } else {
       return res;
     }
@@ -55,7 +55,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error)// for debug
     Message({
-      message: error.message,
+      message: error.data.msg,
       type: 'error',
       duration: 5 * 1000
     })
